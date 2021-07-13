@@ -1,0 +1,1 @@
+window.__NUXT__=(function(a){return {staticAssetsBase:"\u002Falik-net.github.io\u002F_nuxt\u002Fstatic\u002F1626212990",layout:"default",error:a,serverRendered:true,routePath:"\u002F",config:{_app:{basePath:"\u002Falik-net.github.io\u002F",assetsPath:"\u002Falik-net.github.io\u002F_nuxt\u002F",cdnURL:a},content:{dbHash:"a9172f91"}}}}(null));

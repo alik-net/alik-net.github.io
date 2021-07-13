@@ -1,6 +1,6 @@
 {
-  "name": "alik-net",
-  "short_name": "alik-net",
+  "name": "ALIK NET",
+  "short_name": "ALIK NET",
   "description": "## Build Setup",
   "icons": [
     {
@@ -49,5 +49,6 @@
   "start_url": "/alik-net.github.io/?standalone=true",
   "display": "standalone",
   "background_color": "#ffffff",
+  "theme_color": "#8c57d9",
   "lang": "id"
 }
