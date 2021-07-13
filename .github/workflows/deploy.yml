@@ -1,48 +1,55 @@
-name: Deploy to Github Pages
+name: ci
 
 on:
   push:
     branches:
       - main
-
-  workflow_dispatch:
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
 
 jobs:
-  deployment:
-    runs-on: ubuntu-latest
+  ci:
+    runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
-        node-version: [14.x]
+        os: [ubuntu-latest]
+        node: [14]
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout 🛎
+        uses: actions/checkout@master
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+      - name: Setup node env 🏗
+        uses: actions/setup-node@v2.1.5
         with:
-          node-version: ${{ matrix.node-version }}
-          
-      - name: Use NPM 7
-        run: npm i -g npm@latest
+          node-version: ${{ matrix.node }}
+          check-latest: true
 
-      - name: Cache dependencies
-        uses: actions/cache@v2
+      - name: Get yarn cache directory path 🛠
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - name: Cache node_modules 📦
+        uses: actions/cache@v2.1.4
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
         with:
-          path: ~/.npm
-          key: ${{ runner.OS }}-node-${{ hashFiles('**/yarn.lock') }}
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.OS }}-node-
-            ${{ runner.OS }}-
+            ${{ runner.os }}-yarn-
 
-      - name: Build
-        run: |
-          yarn
-          yarn build
-          yarn export
+      - name: Install dependencies 👨🏻‍💻
+        run: yarn
+
+      - name: Generate 🏗
+        run: yarn generate
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-          publish_dir: ./out
+          publish_dir: ./dist
